@@ -2,6 +2,8 @@
 
 language: python
 
+sudo: false
+
 python:
   - 3.4
   - 3.3
@@ -10,33 +12,32 @@ python:
 
 env:
   matrix:
-  - DJANGO='django>=1.4,<1.5'
-  - DJANGO='django>=1.5,<1.6'
   - DJANGO='django>=1.6,<1.7'
+  - DJANGO='django>=1.7,<1.8'
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
+  - pip install pip==1.5.6 'setuptools<8'
   - pip install $DJANGO
   - pip install -r requirements-test.txt
 
 # command to run tests, e.g. python setup.py test
-script: coverage run runtests.py
+script: coverage run `which djangocms-helper` djangocms_markitup test --cms
 
 after_success: coveralls
 
 matrix:
-  exclude:
-  - python: 3.3
-    env: DJANGO='django>=1.4,<1.5'
-  - python: 3.4
-    env: DJANGO='django>=1.4,<1.5'
 
   allow_failures:
     - python: 3.3
-      env: DJANGO='django>=1.5,<1.6'
+      env: DJANGO='django>=1.6,<1.7'
+    - python: 3.4
+      env: DJANGO='django>=1.6,<1.7'
+    - python: 2.6
+      env: DJANGO='django>=1.7,<1.8'
+    - python: 2.7
+      env: DJANGO='django>=1.7,<1.8'
     - python: 3.3
-      env: DJANGO='django>=1.6,<1.7'
+      env: DJANGO='django>=1.7,<1.8'
     - python: 3.4
-      env: DJANGO='django>=1.5,<1.6'
-    - python: 3.4
-      env: DJANGO='django>=1.6,<1.7'
+      env: DJANGO='django>=1.7,<1.8'
